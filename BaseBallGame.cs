@@ -34,6 +34,11 @@ namespace BaseBallGame
 
     internal class BaseBallGame
     {
-        
+        public (int,int) PitcherBallPos { get; set; }
+        public (int,int) BatterBallPos { get; set; }
+        public void PlayBaseballGame()
+        {
+
+        }
     }
 }
