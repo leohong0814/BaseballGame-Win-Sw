@@ -47,8 +47,7 @@
             // tableLayoutPanel_Batter
             // 
             this.tableLayoutPanel_Batter.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel_Batter.ColumnCount = 8;
-            this.tableLayoutPanel_Batter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel_Batter.ColumnCount = 7;
             this.tableLayoutPanel_Batter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tableLayoutPanel_Batter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tableLayoutPanel_Batter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
@@ -58,8 +57,7 @@
             this.tableLayoutPanel_Batter.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tableLayoutPanel_Batter.Location = new System.Drawing.Point(120, 510);
             this.tableLayoutPanel_Batter.Name = "tableLayoutPanel_Batter";
-            this.tableLayoutPanel_Batter.RowCount = 8;
-            this.tableLayoutPanel_Batter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tableLayoutPanel_Batter.RowCount = 7;
             this.tableLayoutPanel_Batter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tableLayoutPanel_Batter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tableLayoutPanel_Batter.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));

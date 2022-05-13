@@ -33,7 +33,7 @@ namespace BaseBallGame
         {
             double xy_p,xy_b;
             xy_p = Math.Sqrt(Math.Pow(posFromPitcher.Item1, 2) + Math.Pow(posFromPitcher.Item2, 2));
-            xy_b = Math.Sqrt(Math.Pow(posFromBatter.Item1, 2) + Math.Pow(posFromBatter.Item2, 2));
+            xy_b = Math.Sqrt(Math.Pow(posFromBatter.Item1+1, 2) + Math.Pow(posFromBatter.Item2+1, 2));
             double dis = Math.Round(Math.Abs(xy_p - xy_b), 1);
             if(bat == false)
             {
