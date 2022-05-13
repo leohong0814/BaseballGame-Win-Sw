@@ -7,10 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseBallGame", "BaseBallGam
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_Self|Any CPU = Debug_Self|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA034966-7043-4C23-8713-094909EAA188}.Debug_Self|Any CPU.ActiveCfg = Debug_Self|Any CPU
+		{DA034966-7043-4C23-8713-094909EAA188}.Debug_Self|Any CPU.Build.0 = Debug_Self|Any CPU
 		{DA034966-7043-4C23-8713-094909EAA188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DA034966-7043-4C23-8713-094909EAA188}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA034966-7043-4C23-8713-094909EAA188}.Release|Any CPU.ActiveCfg = Release|Any CPU

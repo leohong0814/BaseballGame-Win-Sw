@@ -32,6 +32,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_Self|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug_Self\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DEBUG_SELF</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,6 +66,18 @@
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tabel_Batter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tabel_Batter.Designer.cs">
+      <DependentUpon>Tabel_Batter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabel_Pitcher.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tabel_Pitcher.Designer.cs">
+      <DependentUpon>Tabel_Pitcher.cs</DependentUpon>
+    </Compile>
     <Compile Include="Team.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -69,6 +91,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Tabel_Batter.resx">
+      <DependentUpon>Tabel_Batter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tabel_Pitcher.resx">
+      <DependentUpon>Tabel_Pitcher.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
