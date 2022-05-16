@@ -34,10 +34,10 @@ namespace BaseBallGame
             label_LeftFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.LeftFielder), "Name");
             label_CenterFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.CenterFielder), "Name");
             label_RightFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.RightFielder), "Name");
-            label_Batter.DataBindings.Add("Text", BaseBallGame.playerOnBase[0], "PlayerOnBase");
-            label_FirstBasePlayer.DataBindings.Add("Text", BaseBallGame.playerOnBase[1], "PlayerOnBase");
-            label_SecondBasePlayer.DataBindings.Add("Text", BaseBallGame.playerOnBase[2], "PlayerOnBase");
-            label_ThirdBasePlayer.DataBindings.Add("Text", BaseBallGame.playerOnBase[3], "PlayerOnBase");
+            //label_Batter.DataBindings.Add("Text", BaseBallGame.PlayerOnBag[0], "PlayerOnBaseBag");
+            //label_FirstBasePlayer.DataBindings.Add("Text", BaseBallGame.PlayerOnBag[1], "PlayerOnBaseBag");
+            //label_SecondBasePlayer.DataBindings.Add("Text", BaseBallGame.PlayerOnBag[2], "PlayerOnBaseBag");
+            //label_ThirdBasePlayer.DataBindings.Add("Text", BaseBallGame.PlayerOnBag[3], "PlayerOnBaseBag");
         }
         private Player findLinqInPlayer(GarrisonPosition pos)
         {

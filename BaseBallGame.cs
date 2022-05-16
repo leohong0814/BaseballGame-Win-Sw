@@ -67,27 +67,6 @@ namespace BaseBallGame
 
     internal class BaseBallGame
     {
-        public class BaseInBround : INotifyPropertyChanged
-        {
-            public string PlayerOnBase
-            {
-                get
-                {
-                    return playerOnBase;
-                }
-                set
-                {
-                    playerOnBase = value;
-                    NotifyPropertyChanged("PlayerOnBase");
-                }
-            }
-            private string playerOnBase;
-            public event PropertyChangedEventHandler PropertyChanged;
-            public void NotifyPropertyChanged(string propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
         public static Team s_team_1;
         public static Team s_team_2;
         public static Team battingTeam { get; private set; }
@@ -100,11 +79,7 @@ namespace BaseBallGame
         private static OutCount outCount = OutCount.Zero;
         private static Balls balls  = Balls.Zero;
         private static Strikes strikes = Strikes.Zero;
-        public static BaseInBround[] playerOnBase { get; set; } = new BaseInBround[4] {
-            new BaseInBround {PlayerOnBase = string.Empty },
-            new BaseInBround {PlayerOnBase = string.Empty },
-            new BaseInBround {PlayerOnBase = string.Empty },
-            new BaseInBround {PlayerOnBase = string.Empty },};
+
         private static  (int, int) point = (0, 0);
 
 
@@ -141,7 +116,6 @@ namespace BaseBallGame
         {
             for (int i = 1; i <= 9; i++)
             {
-                playerOnBase[0].PlayerOnBase = battingTeam.Teamplayer[battingTeam.Batter_Index - 1].Name;
                 while (!changeSide)
                 {
                     await fiedlPosSelected();
@@ -190,10 +164,6 @@ namespace BaseBallGame
                 Team tmp = battingTeam;
                 battingTeam = fieldingTeam;
                 fieldingTeam = tmp;
-                for (int i = 0; i < playerOnBase.Length - 1; i++)
-                {
-                    playerOnBase[i].PlayerOnBase = string.Empty;
-                }
                 outCount = OutCount.Zero;
                 strikes = Strikes.Zero;
                 balls = Balls.Zero;
@@ -213,40 +183,27 @@ namespace BaseBallGame
         }
         private void movePlayerByNormalBat(BatResult batResult)
         {
-            for(int i = 3; i>=1; i--)
+            try
             {
-                if(!string.IsNullOrEmpty(playerOnBase[i].PlayerOnBase))
-                {
-                    string tmpPlayer = playerOnBase[i].PlayerOnBase;
-                    if(i+ (int)batResult >=4)
-                    {
-                        playerOnBase[i].PlayerOnBase = string.Empty;
-                        if (battingTeam == s_team_1) point.Item1 += 1;
-                        else point.Item2 += 1;
-                    }
-                    else 
-                    {
-                        playerOnBase[i + (int)batResult].PlayerOnBase = tmpPlayer;
-                        playerOnBase[i].PlayerOnBase = string.Empty;
-                    }
-                }
+                battingTeam.Batter_Index += 1;
+                balls = 0;
+                strikes = 0;
             }
-            playerOnBase[(int)batResult].PlayerOnBase = battingTeam.Teamplayer[battingTeam.Batter_Index].Name;
-            battingTeam.Batter_Index +=1;
-            balls = 0;
-            strikes = 0;
-            playerOnBase[0].PlayerOnBase = battingTeam.Teamplayer[battingTeam.Batter_Index].Name;
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Write(ex.ToString());
+                throw;
+            }
         }
         private void movePlayerByHomeRun()
         {
-            int playerCount =  (from _playerOnBase in playerOnBase
-                                where _playerOnBase != null
-                                select _playerOnBase).Count();
-            if (battingTeam == s_team_1) point.Item1 += playerCount;
-            else point.Item2 += playerCount;
-            for (int i = 0; i < playerOnBase.Length-1; i++)
+            try
             {
-                playerOnBase[i] = null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                throw;
             }
         }
         private async Task fiedlPosSelected()
