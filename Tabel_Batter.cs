@@ -19,17 +19,46 @@ namespace BaseBallGame
         {
             InitializeComponent();
             initBatterPanel();
-            label_Batter.Text = BaseBallGame.battingTeam.Teamplayer[0].Name;
-            label_Pitcher.Text = BaseBallGame.fieldingTeam.Teamplayer[0].Name;
-            label_Catcher.Text = BaseBallGame.fieldingTeam.Teamplayer[1].Name;
-            label_FirstBaseMan.Text = BaseBallGame.fieldingTeam.Teamplayer[2].Name;
-            label_SecondBaseMan.Text = BaseBallGame.fieldingTeam.Teamplayer[3].Name;
-            label_ThirdBaseMan.Text = BaseBallGame.fieldingTeam.Teamplayer[4].Name;
-            label_ShortStop.Text = BaseBallGame.fieldingTeam.Teamplayer[5].Name;
-            label_LeftFielder.Text = BaseBallGame.fieldingTeam.Teamplayer[6].Name;
-            label_CenterFielder.Text = BaseBallGame.fieldingTeam.Teamplayer[7].Name;
-            label_RightFielder.Text = BaseBallGame.fieldingTeam.Teamplayer[8].Name;
+            initLabelText();
             RaiseBattingStandbyEvent += ballGame.HandleBattingStandbyEvent;
+        }
+
+        private void initLabelText()
+        {
+            label_Pitcher.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.Pitcher), "Name");
+            label_Catcher.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.Catcher), "Name");
+            label_FirstBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.FirstBaseMan), "Name");
+            label_SecondBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.SecondBaseMan), "Name");
+            label_ThirdBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.ThirdBaseMan), "Name");
+            label_ShortStop.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.ShortStop), "Name");
+            label_LeftFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.LeftFielder), "Name");
+            label_CenterFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.CenterFielder), "Name");
+            label_RightFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.RightFielder), "Name");
+            label_Batter.DataBindings.Add("Text", BaseBallGame.playerOnBase[0], "PlayerOnBase");
+            label_FirstBasePlayer.DataBindings.Add("Text", BaseBallGame.playerOnBase[1], "PlayerOnBase");
+            label_SecondBasePlayer.DataBindings.Add("Text", BaseBallGame.playerOnBase[2], "PlayerOnBase");
+            label_ThirdBasePlayer.DataBindings.Add("Text", BaseBallGame.playerOnBase[3], "PlayerOnBase");
+        }
+        private Player findLinqInPlayer(GarrisonPosition pos)
+        {
+            try
+            {
+                return (from player in BaseBallGame.fieldingTeam.Teamplayer
+                        where player.GarrisonPos.Equals(pos)
+                        select player).First();
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Don't find the equal position,please check the team player!");
+            }
         }
         private void initBatterPanel()
         {
@@ -44,7 +73,7 @@ namespace BaseBallGame
 
         private void ButtonBatter_Click(object sender, EventArgs e)
         {
-            OnRaiseBattingStandbyEvent(new BattingStandbyArgs((tableLayoutPanel_Batter.GetColumn(sender as Control), tableLayoutPanel_Batter.GetRow(sender as Control))));
+            BaseBallGame.BatterBallPos = (tableLayoutPanel_Batter.GetColumn(sender as Control), tableLayoutPanel_Batter.GetRow(sender as Control));
         }
 
         protected virtual void OnRaiseBattingStandbyEvent(BattingStandbyArgs e)
@@ -54,6 +83,16 @@ namespace BaseBallGame
             {
                 raiseEvent(this, e);
             }
+        }
+
+        private void button_Bat_Click(object sender, EventArgs e)
+        {
+            OnRaiseBattingStandbyEvent(new BattingStandbyArgs(true));
+        }
+
+        private void button_SkipBat_Click(object sender, EventArgs e)
+        {
+            OnRaiseBattingStandbyEvent(new BattingStandbyArgs(false));
         }
     }
 }

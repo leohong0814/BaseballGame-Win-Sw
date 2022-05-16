@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BaseBallGame
-{
+{ 
     public enum GarrisonPosition
     {
         Pitcher         = 1,
@@ -40,55 +40,17 @@ namespace BaseBallGame
                 if (posFromPitcher.Item1 < 2 || posFromPitcher.Item1 > 8 || posFromPitcher.Item2 < 2 || posFromPitcher.Item2 > 8)
                     return BatResult.Ball;
                 else
-                    return BatResult.StrikeAndFoulBall;
+                    return BatResult.Strike;
             }
             else
             {
                 if (dis < 1) return BatResult.HomeRun;
-                else if (dis >= 1 && dis <= 2) return BatResult.Tripie;
-                else if (dis > 2 && dis <= 3) return BatResult.Double;
+                else if (dis >= 1 && dis <= 2) return BatResult.Double;
+                else if (dis > 2 && dis <= 3) return BatResult.Single;
                 else if (dis > 3 && dis <= 4.5) return BatResult.Single;
-                else if (dis > 4.5F && dis <= 6) return BatResult.GroundBall;
-                else  return BatResult.StrikeAndFoulBall;
+                else if (dis > 4.5F && dis <= 7.5F) return BatResult.GroundBall;
+                else  return BatResult.Strike;
             }
-        }
-        public FieldResult FieldTheBall(BatResult batResult)
-        {
-            FieldResult fieldResult = FieldResult.Error;
-            int errorRate = new Random().Next(100);
-            switch (batResult)
-            {
-                case BatResult.GroundBall:
-                    {
-                        if(errorRate>10) fieldResult = FieldResult.TagOutAndCatchOut;
-                        else fieldResult = FieldResult.Error;
-                    }
-                    break;
-                case BatResult.Single:
-                    {
-                        if (errorRate > 80) fieldResult = FieldResult.TagOutAndCatchOut;
-                        else fieldResult = FieldResult.Error;
-                    }
-                    break;
-                case BatResult.Double:
-                    {
-                        if (errorRate > 90) fieldResult = FieldResult.TagOutAndCatchOut;
-                        else fieldResult = FieldResult.Error;
-                    }
-                    break;
-                case BatResult.Tripie:
-                    {
-                        if (errorRate > 98) fieldResult = FieldResult.TagOutAndCatchOut;
-                        else fieldResult = FieldResult.Error;
-                    }
-                    break;
-                case BatResult.HomeRun:
-                case BatResult.StrikeAndFoulBall:
-                case BatResult.Ball:
-                    fieldResult = FieldResult.Error;
-                    break;
-            }
-            return fieldResult;
         }
     }
 }

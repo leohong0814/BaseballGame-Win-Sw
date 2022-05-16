@@ -12,10 +12,11 @@ namespace BaseBallGame
 {
     public partial class Form1 : Form
     {
-        BaseBallGame playgame = new BaseBallGame(new NewYorkTeam(), new BostonTeam());
+        BaseBallGame playgame;
         public Form1()
         {
             InitializeComponent();
+            playgame = new BaseBallGame(new NewYorkTeam(), new BostonTeam());
 #if DEBUG_SELF
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.ColumnCount = 2;

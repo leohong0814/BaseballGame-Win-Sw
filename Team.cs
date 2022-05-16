@@ -11,11 +11,51 @@ namespace BaseBallGame
         Batting = 0,
         Fielding = 1,
     }
+
+    public enum FieldResult
+    {
+        FieldError = 0,
+        TagOutAndCatchOut = 1,
+    }
     public abstract class Team
     {
         public string Name { get; protected set; }
         public List<Player> Teamplayer { get; protected set; }
         public TeamState State { get; set; }
+        public int Batter_Index { get; set; } = 1;
+
+        public FieldResult FieldTheBall(BatResult batResult)
+        {
+            FieldResult fieldResult = FieldResult.FieldError;
+            int errorRate = new Random().Next(100);
+            switch (batResult)
+            {
+                case BatResult.GroundBall:
+                    {
+                        if (errorRate > 10) fieldResult = FieldResult.TagOutAndCatchOut;
+                        else fieldResult = FieldResult.FieldError;
+                    }
+                    break;
+                case BatResult.Single:
+                    {
+                        if (errorRate > 80) fieldResult = FieldResult.TagOutAndCatchOut;
+                        else fieldResult = FieldResult.FieldError;
+                    }
+                    break;
+                case BatResult.Double:
+                    {
+                        if (errorRate > 90) fieldResult = FieldResult.TagOutAndCatchOut;
+                        else fieldResult = FieldResult.FieldError;
+                    }
+                    break;
+                case BatResult.HomeRun:
+                case BatResult.Strike:
+                case BatResult.Ball:
+                    fieldResult = FieldResult.FieldError;
+                    break;
+            }
+            return fieldResult;
+        }
     }
     public class NewYorkTeam : Team
     {
