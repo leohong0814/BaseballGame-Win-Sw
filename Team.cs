@@ -54,6 +54,7 @@ namespace BaseBallGame
                     fieldResult = FieldResult.FieldError;
                     break;
             }
+            System.Diagnostics.Debug.WriteLine(fieldResult);
             return fieldResult;
         }
     }

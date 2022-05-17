@@ -65,30 +65,111 @@ namespace BaseBallGame
         public BatResult BatResult { get; set; }
     }
 
-    internal class BaseBallGame
+    public class BaseBag : INotifyPropertyChanged
     {
-        public static Team s_team_1;
-        public static Team s_team_2;
-        public static Team battingTeam { get; private set; }
-        public static Team fieldingTeam { get; private set; }
-        public static (int, int) BatterBallPos { get; set; }
-        public static (int, int) PitcherBallPos { get; set; }
-        private static bool battingTeamStandby { get; set; } = false;
-        private static bool fieldingTeamStandby { get; set; } = false;
-        private static bool batterChooseBat { get; set; } = false;
-        private static OutCount outCount = OutCount.Zero;
-        private static Balls balls  = Balls.Zero;
-        private static Strikes strikes = Strikes.Zero;
+        private string playerOnBagName;
+        public string PlayerOnBagName
+        {
+            get { return playerOnBagName; }
+            set {
+                playerOnBagName = value;
+                OnPropertyChanged("PlayerOnBagName");
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
 
-        private static  (int, int) point = (0, 0);
+    public class FieldPos : INotifyPropertyChanged
+    {
+        public FieldPos(GarrisonPosition pos) => this.Pos = pos;
+        
+        public GarrisonPosition Pos { get; }
+        private string playerOnFieldPos;
+        public string PlayerOnFieldPos
+        {
+            get { return playerOnFieldPos; }
+            set
+            {
+                playerOnFieldPos = value;
+                OnPropertyChanged("PlayerOnFieldPos");
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+    public class BaseBallGame : INotifyPropertyChanged
+    {
+        private static string gameState = string.Empty;
+        public string GameState
+        {
+            get { return gameState; }
+            set
+            {
+                gameState = value;
+                OnPropertyChanged("GameState");
+            }
+        }
 
-
+        private Team s_team_1;
+        private Team s_team_2;
+        public Team battingTeam { get; private set; }
+        public Team fieldingTeam { get; private set; }
+        public (int, int) BatterBallPos { get; set; }
+        public (int, int) PitcherBallPos { get; set; }
+        private bool battingTeamStandby { get; set; } = false;
+        private bool fieldingTeamStandby { get; set; } = false;
+        private bool batterChooseBat { get; set; } = false;
+        private OutCount outCount = OutCount.Zero;
+        private Balls balls  = Balls.Zero;
+        private Strikes strikes = Strikes.Zero;
         private bool changeSide { get; set; } = false;
+        public (byte, byte) Point = (0, 0);
+        public BaseBag[] BaseBagInBaseBall { get; set; } = new BaseBag[4] { 
+            new BaseBag() {  PlayerOnBagName = string.Empty},
+            new BaseBag() {  PlayerOnBagName = string.Empty},
+            new BaseBag() {  PlayerOnBagName = string.Empty},
+            new BaseBag() {  PlayerOnBagName = string.Empty}
+        };
+        public FieldPos[] FieldPosInBaseBall { get; set; } = new FieldPos[9] {
+            new FieldPos(GarrisonPosition.Pitcher),
+            new FieldPos(GarrisonPosition.Catcher),
+            new FieldPos(GarrisonPosition.FirstBaseMan),
+            new FieldPos(GarrisonPosition.SecondBaseMan),
+            new FieldPos(GarrisonPosition.ThirdBaseMan),
+            new FieldPos(GarrisonPosition.ShortStop),
+            new FieldPos(GarrisonPosition.LeftFielder),
+            new FieldPos(GarrisonPosition.CenterFielder),
+            new FieldPos(GarrisonPosition.RightFielder),
+        };
+
+        private string findLinqInPlayer(GarrisonPosition pos)
+        {
+            try
+            {
+                return (from player in fieldingTeam.Teamplayer
+                        where player.GarrisonPos.Equals(pos)
+                        select player).First().Name;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Don't find the equal position,please check the team player!");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         public BaseBallGame()
-        {
-
-        }
+        { }
 
         public BaseBallGame(Team team_1, Team team_2)
         {
@@ -96,11 +177,25 @@ namespace BaseBallGame
             s_team_2 = team_2;
             chooseBattingTeam();
         }
-        public void chooseBattingTeam()
+        private void chooseBattingTeam()
         {
             var coin = new Random().Next(2);
             battingTeam = (coin == 0) ? s_team_1 : s_team_2;
             fieldingTeam = (coin == 0) ? s_team_2 : s_team_1;
+            setFieldPosAndBatPos();
+        }
+        private void setFieldPosAndBatPos()
+        {
+            foreach (var item in FieldPosInBaseBall)
+            {
+                item.PlayerOnFieldPos = (from player in fieldingTeam.Teamplayer
+                                         where player.GarrisonPos.Equals(item.Pos)
+                                         select player).First().Name;
+            }
+            foreach (var item in BaseBagInBaseBall)
+            {
+                item.PlayerOnBagName = string.Empty;
+            }
         }
         public void HandleBattingStandbyEvent(object sender, BattingStandbyArgs e)
         {
@@ -118,13 +213,17 @@ namespace BaseBallGame
             {
                 while (!changeSide)
                 {
+                    updateGameState();
+                    BaseBagInBaseBall[0].PlayerOnBagName = battingTeam.Teamplayer[battingTeam.Batter_Index - 1 % 9].Name;
                     await fiedlPosSelected();
                     await batPosSelected();
                     BatResult batResult = battingTeam.Teamplayer[chooseBatter()].HitTheBall(PitcherBallPos, BatterBallPos, batterChooseBat);
+                    System.Diagnostics.Debug.WriteLine(batResult);
                     ProgressBatResult(batResult);
                     battingTeamStandby = false;
                     fieldingTeamStandby = false;
                 }
+                setFieldPosAndBatPos();
                 changeSide = false;
             }
         }
@@ -137,6 +236,12 @@ namespace BaseBallGame
                     break;
                 case BatResult.Ball:
                     balls += 1;
+                    break;
+                case BatResult.GroundBall:
+                    strikes = 0;
+                    balls = 0;
+                    outCount += 1;
+                    battingTeam.Batter_Index += 1;
                     break;
                 case BatResult.Single:
                 case BatResult.Double:
@@ -154,6 +259,7 @@ namespace BaseBallGame
             {
                 strikes = Strikes.Zero;
                 outCount += 1;
+                battingTeam.Batter_Index += 1;
             }
             if(balls == Balls.Walks)
             {
@@ -180,11 +286,31 @@ namespace BaseBallGame
             balls = Balls.Zero;
             strikes = Strikes.Zero;
             outCount += 1;
+            battingTeam.Batter_Index += 1;
         }
         private void movePlayerByNormalBat(BatResult batResult)
         {
             try
             {
+                for (int i= 3;  i>=0;i--)
+                {
+                    if(!string.IsNullOrEmpty(BaseBagInBaseBall[i].PlayerOnBagName))
+                    {
+                        int moveIndex = i + (int)batResult %4;
+                        if(i + (int)batResult >= 4)
+                        {
+                            if (battingTeam == s_team_1) Point.Item1 += 1;
+                            else Point.Item2 += 1;
+                            BaseBagInBaseBall[i].PlayerOnBagName = string.Empty;
+                        }
+                        else
+                        {
+                            BaseBagInBaseBall[moveIndex].PlayerOnBagName = BaseBagInBaseBall[i].PlayerOnBagName;
+                            BaseBagInBaseBall[i].PlayerOnBagName = string.Empty;
+                        }
+                    }
+                }
+
                 battingTeam.Batter_Index += 1;
                 balls = 0;
                 strikes = 0;
@@ -199,12 +325,30 @@ namespace BaseBallGame
         {
             try
             {
+                int point = (from baseBagInBaseBall in BaseBagInBaseBall
+                             where !string.IsNullOrEmpty(baseBagInBaseBall.PlayerOnBagName)
+                             select baseBagInBaseBall).Count();
+                if (battingTeam == s_team_1) Point.Item1 += (byte)point;
+                else Point.Item2 += (byte)point;
+                foreach (var item in BaseBagInBaseBall)
+                    item.PlayerOnBagName = string.Empty;
+
+                battingTeam.Batter_Index += 1;
+                balls = 0;
+                strikes = 0;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                System.Diagnostics.Debug.Write(ex.ToString());
                 throw;
             }
+        }
+
+        private void updateGameState()
+        {
+            GameState = $"{s_team_1} : {Point.Item1}\r" +
+                        $"{s_team_2} : {Point.Item2}\r" +
+                        $"Strikes : {strikes}, Balls : {balls}, Out : {outCount}";
         }
         private async Task fiedlPosSelected()
         {

@@ -12,39 +12,41 @@ namespace BaseBallGame
 {
     public partial class Tabel_Pitcher : UserControl
     {
-        private BaseBallGame ballGame = new BaseBallGame();
+        private BaseBallGame _ballGame;
         public event EventHandler<FieldingStandbyArgs> RaiseFieldingStandbyEvent;
 
-        public Tabel_Pitcher()
+        public Tabel_Pitcher(BaseBallGame ballGame)
         {
             InitializeComponent();
+            _ballGame = ballGame;
             initPitcherPanel();
             initLabelText();
-            RaiseFieldingStandbyEvent += ballGame.HandleFieldingStandbyEvent;
+            RaiseFieldingStandbyEvent += _ballGame.HandleFieldingStandbyEvent;
         }
         private void initLabelText()
         {
-            label_Pitcher.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.Pitcher), "Name");
-            label_Catcher.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.Catcher), "Name");
-            label_FirstBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.FirstBaseMan), "Name");
-            label_SecondBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.SecondBaseMan), "Name");
-            label_ThirdBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.ThirdBaseMan), "Name");
-            label_ShortStop.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.ShortStop), "Name");
-            label_LeftFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.LeftFielder), "Name");
-            label_CenterFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.CenterFielder), "Name");
-            label_RightFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.RightFielder), "Name");
-            //label_Batter.DataBindings.Add("Text", BaseBallGame.PlayerOnBag[0], "PlayerOnBaseBag");
-            //label_FirstBasePlayer.DataBindings.Add("Text", BaseBallGame.PlayerOnBag[1], "PlayerOnBaseBag");
-            //label_SecondBasePlayer.DataBindings.Add("Text", BaseBallGame.PlayerOnBag[2], "PlayerOnBaseBag");
-            //label_ThirdBasePlayer.DataBindings.Add("Text", BaseBallGame.PlayerOnBag[3], "PlayerOnBaseBag");
+            label_Pitcher.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.Pitcher), "PlayerOnFieldPos");
+            label_Catcher.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.Catcher), "PlayerOnFieldPos");
+            label_FirstBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.FirstBaseMan), "PlayerOnFieldPos");
+            label_SecondBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.SecondBaseMan), "PlayerOnFieldPos");
+            label_ThirdBaseMan.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.ThirdBaseMan), "PlayerOnFieldPos");
+            label_ShortStop.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.ShortStop), "PlayerOnFieldPos");
+            label_LeftFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.LeftFielder), "PlayerOnFieldPos");
+            label_CenterFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.CenterFielder), "PlayerOnFieldPos");
+            label_RightFielder.DataBindings.Add("Text", findLinqInPlayer(GarrisonPosition.RightFielder), "PlayerOnFieldPos");
+            label_Batter.DataBindings.Add("Text", _ballGame.BaseBagInBaseBall[0], "PlayerOnBagName");
+            label_FirstBasePlayer.DataBindings.Add("Text", _ballGame.BaseBagInBaseBall[1], "PlayerOnBagName");
+            label_SecondBasePlayer.DataBindings.Add("Text", _ballGame.BaseBagInBaseBall[2], "PlayerOnBagName");
+            label_ThirdBasePlayer.DataBindings.Add("Text", _ballGame.BaseBagInBaseBall[3], "PlayerOnBagName");
+            label_GameState.DataBindings.Add("Text", _ballGame, "GameState");
         }
-        private Player findLinqInPlayer(GarrisonPosition pos)
+        private FieldPos findLinqInPlayer(GarrisonPosition pos)
         {
             try
             {
-                return (from player in BaseBallGame.fieldingTeam.Teamplayer
-                        where player.GarrisonPos.Equals(pos)
-                        select player).First();
+                return (from playerOnPos in _ballGame.FieldPosInBaseBall
+                        where playerOnPos.Pos.Equals(pos)
+                        select playerOnPos).First();
             }
             catch (IndexOutOfRangeException)
             {

@@ -16,7 +16,8 @@ namespace BaseBallGame
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            BaseBallGame game = new BaseBallGame(new NewYorkTeam(), new BostonTeam());
+            Application.Run(new Form1(game));
         }
     }
 }
